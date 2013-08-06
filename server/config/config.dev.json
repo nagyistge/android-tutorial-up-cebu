@@ -9,10 +9,10 @@
   },
   "app": {
     "port": 3000,
-    "base_url": "http://iinstagraam.com",
-    "cdn": "http://iinstagraam.com",
+    "base_url": "http://iinstagraam.com:3000",
+    "cdn": "http://iinstagraam.com:3000",
     "images_folder": "public/user_images",
-    "images_url": "http://fundmyjourney.com/user_images" ,
+    "images_url": "http://iinstagraam.com:3000/user_images" ,
     "password_salt": "iinstagraam",
     "cipher": "iinstagraam"
   },

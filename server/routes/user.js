@@ -42,6 +42,7 @@ exports.login = function (req, res) {
             var user = result[0];
             var raw_token = {};
             raw_token.user_id = user.user_id;
+            raw_token.name = user.name;
             var today = new Date();
             raw_token.expiry = new Date(today.getTime() + (24 * 60 * 60 * 1000)); // +1 day
             var token_val = token_util.encrypt(raw_token);

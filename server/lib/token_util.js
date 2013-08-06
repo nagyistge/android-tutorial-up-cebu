@@ -12,7 +12,7 @@ exports.encrypt = function (param) {
   var encrypted_str = cipher.update(json_str, 'utf8', 'base64') + cipher.final('base64');
   logger.d(TAG, encrypted_str);
   return encrypted_str;
-  // TODO: perform encryption
+  
 }
 
 exports.decrypt = function (param) {

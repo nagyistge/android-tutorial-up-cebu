@@ -9,7 +9,7 @@ var ERRORS = {
 exports.require_token = function (req, res, next){
   if (req.headers.authorization) {
     var token = token_util.decrypt(req.headers.authorization);
-    if (token == null) {
+    if (token == false) {
       res.json(401, ERRORS.invalid_token);
     }
     else if (new Date(token.expiry) < new Date()) {
