@@ -1,0 +1,22 @@
+{
+  "logs": {
+    "level": "debug",
+    "timestamp": false,
+    "delimiter": "|"
+  },
+  "images": {
+    "resize": false
+  },
+  "app": {
+    "port": 3000,
+    "base_url": "http://54.251.186.10:3000",
+    "cdn": "http://54.251.186.10:3000",
+    "images_folder": "public/user_images",
+    "images_url": "http://54.251.186.10:3000/user_images" ,
+    "password_salt": "iinstagraam",
+    "cipher": "iinstagraam"
+  },
+  "model": {
+    "mongodb": "mongodb://localhost/iinstagraam"
+  }
+}
