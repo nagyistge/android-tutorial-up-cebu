@@ -7,6 +7,10 @@
   },
   "dependencies": {
     "express": "3.2.6",
-    "ejs": "*"
+    "ejs": "*",
+    "nconf": "*",
+    "express-validator": "*",
+    "async": "*",
+    "mongoq": "*"
   }
 }
