@@ -44,32 +44,8 @@ public class LoginActivity extends Activity {
 			}
 		});
 	    
-	    btnLogin.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				new LoginAsync().execute();				
-			}
-		});
 	}
 	
-	private class LoginAsync extends AsyncTask<Void, Void, String> {
-		@Override
-		protected String doInBackground(Void... params) {
-			String result = APIUtil.login(txtEmail.getText().toString(), txtPassword.getText().toString());
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			if (result == null) {
-				
-			}
-			else {
-				
-			}
-		}
-		
-	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
