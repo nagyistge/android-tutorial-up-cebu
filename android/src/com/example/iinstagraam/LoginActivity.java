@@ -1,9 +1,16 @@
 package com.example.iinstagraam;
 
+import org.json.JSONException;
+
+import com.example.iinstagraam.model.APIError;
+import com.example.iinstagraam.model.User;
 import com.example.iinstagraam.util.APIUtil;
+import com.example.iinstagraam.util.ParserUtil;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,8 +51,61 @@ public class LoginActivity extends Activity {
 			}
 		});
 	    
+	    btnLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new LoginAsync().execute();				
+			}
+		});
 	}
 	
+	private class LoginAsync extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			String result = APIUtil.login(txtEmail.getText().toString(), txtPassword.getText().toString());
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			String error_message = "";
+			if (result == null) {
+				error_message = "Unknown error!";
+			}
+			else {
+				APIError error = ParserUtil.getAPIError(result);
+				if (error != null) {
+					error_message = error.getMessage();
+				} 
+				else {
+					try {
+						User user = ParserUtil.getUser(result); // We don't use it for now...
+						Intent intent = new Intent().setClass(getApplicationContext(), MainActivity.class);
+						startActivity(intent);
+						
+					} catch (JSONException e) {
+						error_message = "Unknown error!";
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			if (!error_message.equals("")){
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+				alertDialogBuilder.setMessage(error_message);
+				alertDialogBuilder.setTitle("Login Error");
+				alertDialogBuilder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						dialog.cancel();
+					}
+				});
+				alertDialogBuilder.setCancelable(true);
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+			}
+		}
+		
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
