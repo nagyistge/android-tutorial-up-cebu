@@ -1,8 +1,11 @@
 package com.example.iinstagraam;
 
+import com.example.iinstagraam.util.APIUtil;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,16 +18,22 @@ public class LoginActivity extends Activity {
 	public final static int REGISTER_ACTION = 1;
 	
 	Context mContext = this;
+	
+	EditText txtEmail;
+	EditText txtPassword;
+	Button btnLogin;
+	Button btnRegister;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.login);
 	    
-	    EditText txtEmail = (EditText) findViewById(R.id.email);
-	    EditText txtPassword = (EditText) findViewById(R.id.password);
-	    Button btnLogin = (Button) findViewById(R.id.btnLogin);
-	    Button btnRegister = (Button) findViewById(R.id.btnRegister);
+	    txtEmail = (EditText) findViewById(R.id.email);
+	    txtPassword = (EditText) findViewById(R.id.password);
+	    btnLogin = (Button) findViewById(R.id.btnLogin);
+	    btnRegister = (Button) findViewById(R.id.btnRegister);
 	    
 	    btnRegister.setOnClickListener(new OnClickListener() {
 			
@@ -34,7 +43,34 @@ public class LoginActivity extends Activity {
 				startActivityForResult(intent, REGISTER_ACTION);
 			}
 		});
+	    
+	    btnLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new LoginAsync().execute();				
+			}
+		});
 	}
+	
+	private class LoginAsync extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			String result = APIUtil.login(txtEmail.getText().toString(), txtPassword.getText().toString());
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if (result == null) {
+				
+			}
+			else {
+				
+			}
+		}
+		
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REGISTER_ACTION) {
