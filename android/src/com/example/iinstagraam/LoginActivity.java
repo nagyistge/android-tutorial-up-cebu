@@ -3,8 +3,10 @@ package com.example.iinstagraam;
 import org.json.JSONException;
 
 import com.example.iinstagraam.model.APIError;
+import com.example.iinstagraam.model.Token;
 import com.example.iinstagraam.model.User;
 import com.example.iinstagraam.util.APIUtil;
+import com.example.iinstagraam.util.AppSettings;
 import com.example.iinstagraam.util.ParserUtil;
 
 import android.app.Activity;
@@ -45,6 +47,11 @@ public class LoginActivity extends Activity {
 	    btnLogin = (Button) findViewById(R.id.btnLogin);
 	    btnRegister = (Button) findViewById(R.id.btnRegister);
 	    
+	    if(!AppSettings.getString(AppSettings.EMAIL, mContext).equals("")) {
+	    	txtEmail.setText(AppSettings.getString(AppSettings.EMAIL, mContext));
+	    	txtPassword.setText(AppSettings.getString(AppSettings.PASSWORD, mContext));
+	    }
+	    
 	    btnRegister.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -84,7 +91,12 @@ public class LoginActivity extends Activity {
 				} 
 				else {
 					try {
-						User user = ParserUtil.getUser(result); // We don't use it for now...
+						Token token = ParserUtil.getToken(result);
+						
+						AppSettings.setString(AppSettings.EMAIL, txtEmail.getText().toString(), mContext);
+						AppSettings.setString(AppSettings.PASSWORD, txtPassword.getText().toString(), mContext);
+						AppSettings.setString(AppSettings.TOKEN, token.getToken(), mContext);
+						
 						Intent intent = new Intent().setClass(getApplicationContext(), MainActivity.class);
 						startActivity(intent);
 						
