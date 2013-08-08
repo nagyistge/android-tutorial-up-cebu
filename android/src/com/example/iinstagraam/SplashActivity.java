@@ -3,6 +3,7 @@ package com.example.iinstagraam;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -29,7 +30,11 @@ public class SplashActivity extends Activity {
 	    handler.postDelayed(new Runnable(){
 			@Override
 			public void run() {
-	    		Toast.makeText(mContext, "TODO: Launch next activity", Toast.LENGTH_LONG).show();
+	    		//Toast.makeText(mContext, "TODO: Launch next activity", Toast.LENGTH_LONG).show();
+				Intent intent;
+				intent = new Intent().setClass(getApplicationContext(), LoginActivity.class);
+				startActivity(intent);
+				finish(); // this is needed so that pressing back from the main activities will not go back to splash
 			}
 	    }, SPLASH_DURATION);
 	    
