@@ -8,9 +8,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
+	public final static int REGISTER_ACTION = 1;
+	
 	Context mContext = this;
 	/** Called when the activity is first created. */
 	@Override
@@ -28,10 +31,24 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent().setClass(getApplicationContext(), RegisterActivity.class);
-				startActivity(intent);
-				
+				startActivityForResult(intent, REGISTER_ACTION);
 			}
 		});
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REGISTER_ACTION) {
+			if (resultCode == RESULT_OK) {
+				Toast.makeText(mContext, 
+					"Registration successful! Please login to proceed.", Toast.LENGTH_LONG).show();
+			}
+			else {
+				Toast.makeText(mContext, 
+					"Registration cancelled!", Toast.LENGTH_LONG).show();
+			}
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

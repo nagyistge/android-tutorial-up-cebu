@@ -2,6 +2,7 @@ package com.example.iinstagraam;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
@@ -33,6 +34,8 @@ public class RegisterActivity extends Activity {
 			Log.d(TAG, url);
 			if (url.equals(mContext.getString(R.string.register_url_success))) {
 				Log.d(TAG, "closing RegisterActivity");
+				Intent returnIntent = new Intent();
+				setResult(RESULT_OK,returnIntent);     
 				finish();
 				return true;
 			} else {
