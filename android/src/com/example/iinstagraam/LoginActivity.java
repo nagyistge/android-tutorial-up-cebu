@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,7 +36,9 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);  
 	    setContentView(R.layout.login);
+	    
 	    
 	    txtEmail = (EditText) findViewById(R.id.email);
 	    txtPassword = (EditText) findViewById(R.id.password);
@@ -54,6 +57,7 @@ public class LoginActivity extends Activity {
 	    btnLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setProgressBarIndeterminateVisibility(true);
 				new LoginAsync().execute();				
 			}
 		});
@@ -68,6 +72,7 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
+			setProgressBarIndeterminateVisibility(false); 
 			String error_message = "";
 			if (result == null) {
 				error_message = "Unknown error!";
