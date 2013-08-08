@@ -11,7 +11,7 @@ import android.widget.Toast;
 public class SplashActivity extends Activity {
 	
 	private static String TAG = "SplashActivity";
-	private static int SPLASH_DURATION = 5000;
+	private static int SPLASH_DURATION = 1000;
 	
 	Context mContext;
 	
