@@ -2,4 +2,6 @@
 
     <string name="app_name">iinstagraam</string>
 
+    <string name="register_question">Don\'t have an account yet?</string>
+
 </resources>
