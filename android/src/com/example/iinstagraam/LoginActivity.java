@@ -47,6 +47,7 @@ public class LoginActivity extends Activity {
 	    btnLogin = (Button) findViewById(R.id.btnLogin);
 	    btnRegister = (Button) findViewById(R.id.btnRegister);
 	    
+	    // pre-fill email and password on start
 	    if(!AppSettings.getString(AppSettings.EMAIL, mContext).equals("")) {
 	    	txtEmail.setText(AppSettings.getString(AppSettings.EMAIL, mContext));
 	    	txtPassword.setText(AppSettings.getString(AppSettings.PASSWORD, mContext));
@@ -97,7 +98,7 @@ public class LoginActivity extends Activity {
 						AppSettings.setString(AppSettings.PASSWORD, txtPassword.getText().toString(), mContext);
 						AppSettings.setString(AppSettings.TOKEN, token.getToken(), mContext);
 						
-						Intent intent = new Intent().setClass(getApplicationContext(), MainActivity.class);
+						Intent intent = new Intent().setClass(getApplicationContext(), PhotoStreamActivity.class);
 						startActivity(intent);
 						
 					} catch (JSONException e) {
