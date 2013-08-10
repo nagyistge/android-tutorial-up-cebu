@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:id="@+id/relativeLayout1">
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Name"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/ivAddPhoto"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="3dp"
+            android:src="@drawable/add_image" />
+    	
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/relativeLayout1"
+        android:padding="0dp"
+        android:background="@color/gray" >
+
+    </RelativeLayout>
+    
+	<LinearLayout
+	    android:id="@+id/linearLayout1"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:layout_below="@id/relativeLayout2" >
+	
+	    <ListView
+	        android:id="@+id/listPhotos"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:divider="#ccccCC"
+	        android:dividerHeight="0.1dp" 
+	        android:layout_weight="1">
+
+	    </ListView>
+		<Button
+		    android:id="@+id/btnMore"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:text="More Photos" />
+	</LinearLayout>
+</RelativeLayout>
