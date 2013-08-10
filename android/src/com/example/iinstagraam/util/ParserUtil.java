@@ -1,13 +1,16 @@
 package com.example.iinstagraam.util;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
 import com.example.iinstagraam.model.APIError;
+import com.example.iinstagraam.model.Photo;
 import com.example.iinstagraam.model.Token;
 import com.example.iinstagraam.model.User;
 
@@ -61,5 +64,32 @@ public class ParserUtil {
 		user.setEmail(json_profile.getString("email"));
 		user.setName(json_profile.getString("name"));
 		return user;
+	}
+	
+	/*
+	[
+	{
+		"photo_id": "<id>",
+		"photo_url": "<photo_url>",
+		"date_uploaded": "<date_uploaded>",
+		"caption": "<caption>"
+		"user_name": "<name of the owner of the photo>"
+	}, 
+	]
+	*/
+	public static ArrayList<Photo> getPhotos(String str) throws JSONException {
+		ArrayList<Photo> photos = new ArrayList<Photo>();
+		JSONArray json = new JSONArray(str);
+		
+		for (int i=0; i<json.length(); i++) {
+			Photo photo = new Photo();
+			JSONObject item = json.getJSONObject(i);
+			photo.setPhoto_url(item.getString("photo_url"));
+			photo.setCaption(item.getString("caption"));
+			photo.setUser_name(item.getString("user_name"));
+			//photo.setDate_uploaded(item.getString("date_uploaded"));
+			photos.add(photo);
+		}
+		return photos;
 	}
 }

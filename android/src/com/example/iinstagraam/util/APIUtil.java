@@ -25,6 +25,7 @@ public class APIUtil {
 	private static String TAG = "APIUtil";
 	private static String BASE_URL = "http://54.251.186.10:3000";
 	private static String LOGIN_URL = BASE_URL + "/user/login";
+	private static String GETPHOTOS_URL = BASE_URL + "/photos";
 	
 	public static String login(String email, String password) {
 		
@@ -68,6 +69,40 @@ public class APIUtil {
 			e.printStackTrace();
 			return null;
 		}
+		
+	}
+	
+	public static String getPhotos(int page, String token) {
+		
+		try {
+			URL url = new URL(GETPHOTOS_URL + '/' + page);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-Type","application/json");
+			conn.setRequestProperty("Authorization",token);
+			
+			conn.connect();
+			
+			InputStream in = new BufferedInputStream(conn.getInputStream());
+			
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(in));
+			String responeLine;
+			StringBuilder responseBuilder = new StringBuilder();
+			while ((responeLine = bufferedReader.readLine()) != null) {
+				responseBuilder.append(responeLine);
+			}
+			String result = responseBuilder.toString(); 
+			Log.d(TAG, result);
+			return result;
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} 
 		
 	}
 }
