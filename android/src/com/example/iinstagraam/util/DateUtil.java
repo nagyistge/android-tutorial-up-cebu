@@ -40,8 +40,9 @@ public class DateUtil {
 
 /**
  * Helper class for handling ISO 8601 strings of the following format:
- * "2008-03-01T13:00:00+01:00". It also supports parsing the "Z" timezone.
+ * "2008-03-01T13:00:00.00+01:00". It also supports parsing the "Z" timezone.
  */
+ // http://stackoverflow.com/questions/2201925/converting-iso8601-compliant-string-to-java-util-date (2nd answer)
  final class ISO8601 {
     /** Transform Calendar to ISO 8601 string. */
     public static String fromCalendar(final Calendar calendar) {
