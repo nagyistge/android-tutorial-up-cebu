@@ -28,7 +28,7 @@ exports.add_photo = function(user_id, photo, next) {
     else {
       photo.photo_id = "" + result.seq;
       photo.user_id = user_id;
-      photo.date_created = new Date();
+      photo.date_uploaded = new Date();
       content.record = photo;
       db.create(content, function(error, result){
         if (error){
