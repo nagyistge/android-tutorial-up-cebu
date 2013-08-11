@@ -193,8 +193,17 @@ public class PhotoStreamActivity extends Activity {
 				}
 				else {
 					// TODO: Parse the result and add to the list of images being shown.
-					Toast.makeText(mContext, 
-							"Upload successful", Toast.LENGTH_LONG).show();
+					try {
+						Log.d(TAG, "Successful in adding photo");
+						Photo photo = ParserUtil.getPhoto(result);
+						Toast.makeText(mContext, 
+								"Upload successful", Toast.LENGTH_LONG).show();
+						mAdapter.addPhoto(photo);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 
 				}
 			}

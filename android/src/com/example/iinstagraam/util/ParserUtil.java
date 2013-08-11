@@ -92,4 +92,15 @@ public class ParserUtil {
 		}
 		return photos;
 	}
+	
+	public static Photo getPhoto(String str) throws JSONException {
+		Photo photo = new Photo();
+		JSONObject item = new JSONObject(str);
+		photo.setPhoto_url(item.getString("photo_url"));
+		photo.setCaption(item.getString("caption"));
+		photo.setUser_name(item.getString("user_name"));
+		//photo.setDate_uploaded(item.getString("date_uploaded"));
+		return photo;
+		
+	}
 }

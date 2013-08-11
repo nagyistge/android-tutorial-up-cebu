@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 
 public class PhotoAdapter extends ArrayAdapter<Photo>{
 
+	private static final String TAG = "PhotoAdapter";
 	Context mContext;
 	ArrayList<Photo> mPhotos;
 	int mResourceId;
@@ -34,6 +36,12 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 	float mHeight;
 	float mWidth;
 	DisplayMetrics mOutMetrics; 
+	
+	public void addPhoto(Photo photo) {
+		mPhotos.add(0, photo);
+		Log.d(TAG, "Adding photo to Adapter...");
+		notifyDataSetChanged();
+	}
 	
 	public PhotoAdapter(Context context, ArrayList<Photo> objects) {
 		super(context, R.layout.stream_item , objects);
