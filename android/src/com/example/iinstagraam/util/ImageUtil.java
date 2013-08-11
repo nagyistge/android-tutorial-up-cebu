@@ -7,8 +7,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
@@ -52,4 +54,26 @@ public class ImageUtil {
         }
         return null;
     }
+	
+	public static Bitmap getScaledBitmap(Context context, Bitmap bitmap, float bound) {
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		int bounding = dpToPx(bound, context);
+		
+		float xScale = ((float) bounding) / width;
+	    float yScale = ((float) bounding) / height;
+	    float scale = (xScale <= yScale) ? xScale : yScale;
+	    
+	    Matrix matrix = new Matrix();
+	    matrix.postScale(scale, scale);
+	    
+	    Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+	    return scaledBitmap;
+	}
+	
+	private static int dpToPx(float dp, Context context)
+	{
+	    float density = context.getResources().getDisplayMetrics().density;
+	    return Math.round((float)dp * density);
+	}
 }

@@ -13,17 +13,21 @@ import com.example.iinstagraam.util.AppSettings;
 import com.example.iinstagraam.util.ParserUtil;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,6 +49,9 @@ public class PhotoStreamActivity extends Activity {
 	private PhotoAdapter mAdapter;
 	
 	private Context mContext;
+	
+	private Uri mFileUri;
+	private String mCaption;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -68,9 +75,11 @@ public class PhotoStreamActivity extends Activity {
 			    imagesFolder.mkdirs(); // <----
 			    long unixTime = System.currentTimeMillis() / 1000L;
 			    File image = new File(imagesFolder, unixTime + ".jpg");
+			    Log.d(TAG, "Absolute path: " + image.getAbsolutePath());
 			    Uri fileUri = Uri.fromFile(image);
+			    mFileUri = fileUri;
 			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-
+			    Log.d(TAG, mFileUri.toString());
 			    // start the image capture Intent
 			    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 			}
@@ -84,10 +93,33 @@ public class PhotoStreamActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 	        if (resultCode == RESULT_OK) {
-	            // Image captured and saved to fileUri specified in the Intent
-	            Toast.makeText(this, "Image saved to:\n" +
-	                     data.getData(), Toast.LENGTH_LONG).show();
-	            
+	            if (data != null) {
+	            	mFileUri = data.getData(); // some phones support this, others not.
+	            }
+	        	
+	        	// Image captured and saved to fileUri specified in the Intent
+	            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	            builder.setMessage("Enter caption:");
+	            builder.setCancelable(false);
+
+	            final EditText editCaption = new EditText(mContext);
+	            builder.setView(editCaption);
+
+	            builder.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    mCaption = editCaption.getText().toString();
+	                    new UploadAsync().execute();
+	    	            ((Activity) mContext).setProgressBarIndeterminateVisibility(true);
+	                }
+	            })
+	            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    dialog.cancel();
+	                }
+	            });
+	            AlertDialog alert = builder.create();
+	            alert.show();
+	              
 	        } else if (resultCode == RESULT_CANCELED) {
 	            // User cancelled the image capture
 	        } else {
@@ -136,6 +168,38 @@ public class PhotoStreamActivity extends Activity {
 				}
 			}
 		}
+		
+	}
+	
+	private class UploadAsync extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected String doInBackground(Void... params) {
+			
+			String result = APIUtil.uploadPhoto(mFileUri, mCaption, AppSettings.getString(AppSettings.TOKEN, mContext));
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			((Activity) mContext).setProgressBarIndeterminateVisibility(false);
+			if (result==null) {
+				// TODO: Error
+			}
+			else {
+				APIError error = ParserUtil.getAPIError(result);
+				if (error!=null){
+					// TODO: Error
+				}
+				else {
+					// TODO: Parse the result and add to the list of images being shown.
+					Toast.makeText(mContext, 
+							"Upload successful", Toast.LENGTH_LONG).show();
+
+				}
+			}
+		}
+		
 		
 	}
 	

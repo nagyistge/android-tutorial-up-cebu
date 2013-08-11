@@ -13,11 +13,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PhotoAdapter extends ArrayAdapter<Photo>{
@@ -26,10 +30,23 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 	ArrayList<Photo> mPhotos;
 	int mResourceId;
 	
+	float mDensity;
+	float mHeight;
+	float mWidth;
+	DisplayMetrics mOutMetrics; 
+	
 	public PhotoAdapter(Context context, ArrayList<Photo> objects) {
 		super(context, R.layout.stream_item , objects);
 		mContext = context;
 		mPhotos = objects;
+		
+		Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
+		mOutMetrics = new DisplayMetrics ();
+		display.getMetrics(mOutMetrics);
+		
+		mDensity  = mContext.getResources().getDisplayMetrics().density;
+		mHeight = mOutMetrics.heightPixels / mDensity;
+		mWidth  = mOutMetrics.widthPixels / mDensity;
 	}
 
 	@Override
@@ -58,8 +75,24 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 		//holder.txtDate.setText(photo.getDate_uploaded());
 		
 		if (holder.ivPhoto != null) {
-            new ImageDownloaderTask(holder.ivPhoto).execute(photo.getPhoto_url());
-        }	
+			if (mPhotos.get(position).getBitmap() == null){
+				new ImageDownloaderTask(holder.ivPhoto, position).execute(photo.getPhoto_url());
+				// set to default image while still downloading the images
+				holder.ivPhoto.setImageDrawable(
+						holder.ivPhoto.getContext().getResources()
+	                    .getDrawable(R.drawable.default_photo));
+			}
+			else {
+				holder.ivPhoto.setImageBitmap(
+						mPhotos.get(position).getBitmap());
+			}
+        }
+		
+		//RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.ivPhoto.getLayoutParams(); 
+	    //params.width = mOutMetrics.widthPixels;
+	    //params.height = mOutMetrics.widthPixels;
+	    //holder.ivPhoto.setLayoutParams(params);
+		
 		return row;
 	}
 	
@@ -71,44 +104,48 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 	}
 	
 
+	// http://javatechig.com/android/asynchronous-image-loader-in-android-listview/#2-creating-a-custom-listview-with-thumbnails
+	class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+	    private final WeakReference imageViewReference;
+	    private final int position;
+	    public ImageDownloaderTask(ImageView imageView, int position) {
+	        imageViewReference = new WeakReference(imageView);
+	        this.position = position;
+	    }
+	 
+	    @Override
+	    // Actual download method, run in the task thread
+	    protected Bitmap doInBackground(String... params) {
+	        // params comes from the execute() call: params[0] is the url.
+	        return ImageUtil.downloadBitmap(params[0]);
+	    }
+	 
+	    @Override
+	    // Once the image is downloaded, associates it to the imageView
+	    protected void onPostExecute(Bitmap bitmap) {
+	        if (isCancelled()) {
+	            bitmap = null;
+	        }
+	 
+	        if (imageViewReference != null) {
+	            ImageView imageView = (ImageView) imageViewReference.get();
+	            if (imageView != null) {
+	 
+	                if (bitmap != null) {
+	                	imageView.setImageBitmap(ImageUtil.getScaledBitmap(mContext, bitmap, mWidth));
+	                	bitmap = ImageUtil.getScaledBitmap(mContext, bitmap, mWidth);
+	                    mPhotos.get(position).setBitmap(bitmap);
+	                } else {
+	                	
+	                    //imageView.setImageDrawable(imageView.getContext().getResources()
+	                    //        .getDrawable(R.drawable.photo_default));
+	                }
+	            }
+	 
+	        }
+	    }
+	 
+	}
+
 }
 
-// http://javatechig.com/android/asynchronous-image-loader-in-android-listview/#2-creating-a-custom-listview-with-thumbnails
-class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
-    private final WeakReference imageViewReference;
- 
-    public ImageDownloaderTask(ImageView imageView) {
-        imageViewReference = new WeakReference(imageView);
-    }
- 
-    @Override
-    // Actual download method, run in the task thread
-    protected Bitmap doInBackground(String... params) {
-        // params comes from the execute() call: params[0] is the url.
-        return ImageUtil.downloadBitmap(params[0]);
-    }
- 
-    @Override
-    // Once the image is downloaded, associates it to the imageView
-    protected void onPostExecute(Bitmap bitmap) {
-        if (isCancelled()) {
-            bitmap = null;
-        }
- 
-        if (imageViewReference != null) {
-            ImageView imageView = (ImageView) imageViewReference.get();
-            if (imageView != null) {
- 
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                	
-                    //imageView.setImageDrawable(imageView.getContext().getResources()
-                    //        .getDrawable(R.drawable.photo_default));
-                }
-            }
- 
-        }
-    }
- 
-}

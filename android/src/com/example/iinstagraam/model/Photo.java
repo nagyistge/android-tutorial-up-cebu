@@ -2,11 +2,14 @@ package com.example.iinstagraam.model;
 
 import java.util.Date;
 
+import android.graphics.Bitmap;
+
 public class Photo {
 	public String photo_url;
 	public Date date_uploaded;
 	public String caption;
 	public String user_name;
+	public Bitmap bitmap;
 	
 	public String getPhoto_url() {
 		return photo_url;
@@ -31,6 +34,12 @@ public class Photo {
 	}
 	public void setUser_name(String user_name) {
 		this.user_name = user_name;
+	}
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+	public void setBitmap(Bitmap bitmap) {
+		this.bitmap = bitmap;
 	}
 	
 	
