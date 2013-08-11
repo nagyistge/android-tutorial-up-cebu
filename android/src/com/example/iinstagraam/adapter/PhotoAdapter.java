@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.iinstagraam.R;
 import com.example.iinstagraam.model.Photo;
+import com.example.iinstagraam.util.DateUtil;
 import com.example.iinstagraam.util.ImageUtil;
 
 import android.app.Activity;
@@ -40,6 +41,12 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 	public void addPhoto(Photo photo) {
 		mPhotos.add(0, photo);
 		Log.d(TAG, "Adding photo to Adapter...");
+		notifyDataSetChanged();
+	}
+	
+	public void addPhotos(ArrayList<Photo> photos) {
+		mPhotos.addAll(photos);
+		Log.d(TAG, "Adding second set of photos to Adapter...");
 		notifyDataSetChanged();
 	}
 	
@@ -80,7 +87,7 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 		Photo photo = mPhotos.get(position);
 		holder.txtCaption.setText(photo.getCaption());
 		holder.txtName.setText(photo.getUser_name());
-		//holder.txtDate.setText(photo.getDate_uploaded());
+		holder.txtDate.setText(DateUtil.dateToString(photo.getDate_uploaded()));
 		
 		if (holder.ivPhoto != null) {
 			if (mPhotos.get(position).getBitmap() == null){

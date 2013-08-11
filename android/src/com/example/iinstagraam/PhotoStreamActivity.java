@@ -85,6 +85,18 @@ public class PhotoStreamActivity extends Activity {
 			}
 		});
 	    
+	    btnMore = (Button) findViewById(R.id.btnMore);
+	    btnMore.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setProgressBarIndeterminateVisibility(true);
+				new PhotoStreamAsync().execute();
+				btnMore.setEnabled(false);
+				
+			}
+		});
+	    
+	    setProgressBarIndeterminateVisibility(true);
 	    new PhotoStreamAsync().execute();
 	}
 	
@@ -132,7 +144,8 @@ public class PhotoStreamActivity extends Activity {
 
 		@Override
 		protected String doInBackground(Integer... params) {
-			setProgressBarIndeterminateVisibility(true);
+			Log.d(TAG, "doInBackground: PhotoStreamAsync");
+			
 			String result = APIUtil.getPhotos(mPage, AppSettings.getString(AppSettings.TOKEN, mContext));
 			return result;
 		}
@@ -150,15 +163,22 @@ public class PhotoStreamActivity extends Activity {
 				}
 				else {
 					try {
-						ArrayList<Photo> photos = ParserUtil.getPhotos(result);
-						mPhotos.addAll(photos);
+						btnMore.setEnabled(true);
 						if (mPage == 1){
 							// Initialize the Images
+							ArrayList<Photo> photos = ParserUtil.getPhotos(result);
+							mPhotos.addAll(photos);
 							mAdapter = new PhotoAdapter(mContext, mPhotos);
 							photoList.setAdapter(mAdapter);
 						}
 						else {
-							
+							ArrayList<Photo> photos = ParserUtil.getPhotos(result);
+							if (photos.size() == 0) {
+								Toast.makeText(mContext, 
+										"No more photos to load", Toast.LENGTH_LONG).show();
+								btnMore.setEnabled(false);
+							}
+							mAdapter.addPhotos(photos);
 						}
 						mPage++;
 					} catch (JSONException e) {

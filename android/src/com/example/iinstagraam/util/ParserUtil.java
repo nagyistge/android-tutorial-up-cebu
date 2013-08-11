@@ -87,7 +87,8 @@ public class ParserUtil {
 			photo.setPhoto_url(item.getString("photo_url"));
 			photo.setCaption(item.getString("caption"));
 			photo.setUser_name(item.getString("user_name"));
-			//photo.setDate_uploaded(item.getString("date_uploaded"));
+			photo.setDate_uploaded(DateUtil.ISODateToDate(
+					item.getString("date_uploaded")));
 			photos.add(photo);
 		}
 		return photos;
@@ -99,7 +100,8 @@ public class ParserUtil {
 		photo.setPhoto_url(item.getString("photo_url"));
 		photo.setCaption(item.getString("caption"));
 		photo.setUser_name(item.getString("user_name"));
-		//photo.setDate_uploaded(item.getString("date_uploaded"));
+		photo.setDate_uploaded(DateUtil.ISODateToDate(
+				item.getString("date_uploaded")));
 		return photo;
 		
 	}
