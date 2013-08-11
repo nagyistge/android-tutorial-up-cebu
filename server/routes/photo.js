@@ -35,7 +35,7 @@ exports.submit = function (req, res) {
   async.auto({
     validation: function(callback){
       req.assert('photo_data', FIELD_ERRORS.photo_data).notEmpty();
-      req.assert('caption', FIELD_ERRORS.caption).notEmpty();
+      //req.assert('caption', FIELD_ERRORS.caption).notEmpty();
       var val_errors = req.validationErrors();  
     	if(val_errors){
         res.json(200, ERRORS.validation);
