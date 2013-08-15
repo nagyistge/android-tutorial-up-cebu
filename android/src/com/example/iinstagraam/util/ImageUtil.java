@@ -76,4 +76,20 @@ public class ImageUtil {
 	    float density = context.getResources().getDisplayMetrics().density;
 	    return Math.round((float)dp * density);
 	}
+
+	public static Bitmap getScaledSquareBitmap(Context context, Bitmap bitmap, float bound) {
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		int bounding = dpToPx(bound, context);
+		
+		float xScale = ((float) bounding) / width;
+	    float yScale = ((float) bounding) / height;
+	    
+	    Matrix matrix = new Matrix();
+	    matrix.postScale(xScale, yScale);
+	    
+	    Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+	    return scaledBitmap;
+	}
+
 }
