@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONException;
 
 import com.example.iinstagraam.adapter.PhotoAdapter;
+import com.example.iinstagraam.data.MyPhotoDBAdapter;
 import com.example.iinstagraam.model.APIError;
 import com.example.iinstagraam.model.Photo;
 import com.example.iinstagraam.util.APIUtil;
@@ -92,6 +93,17 @@ public class PhotoStreamActivity extends Activity {
 				setProgressBarIndeterminateVisibility(true);
 				new PhotoStreamAsync().execute();
 				btnMore.setEnabled(false);
+				
+			}
+		});
+	    
+	    txtName = (TextView) findViewById(R.id.txtName);
+	    txtName.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent().setClass(getApplicationContext(), MyPhotosActivity.class);
+				startActivity(intent);
 				
 			}
 		});
@@ -219,6 +231,12 @@ public class PhotoStreamActivity extends Activity {
 						Toast.makeText(mContext, 
 								"Upload successful", Toast.LENGTH_LONG).show();
 						mAdapter.addPhoto(photo);
+						//photo.setPhoto_url(mFileUri.getPath());
+						MyPhotoDBAdapter db = new MyPhotoDBAdapter(mContext);
+						db.open();
+						db.addPhoto(photo);
+						db.close();
+						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
