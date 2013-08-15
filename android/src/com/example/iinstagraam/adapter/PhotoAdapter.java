@@ -12,6 +12,7 @@ import com.example.iinstagraam.util.ImageUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
@@ -93,9 +94,12 @@ public class PhotoAdapter extends ArrayAdapter<Photo>{
 			if (mPhotos.get(position).getBitmap() == null){
 				new ImageDownloaderTask(holder.ivPhoto, position).execute(photo.getPhoto_url());
 				// set to default image while still downloading the images
-				holder.ivPhoto.setImageDrawable(
-						holder.ivPhoto.getContext().getResources()
-	                    .getDrawable(R.drawable.default_photo));
+				holder.ivPhoto.setImageBitmap(
+						ImageUtil.getScaledBitmap(mContext, 
+						BitmapFactory.decodeResource(holder.ivPhoto.getContext().getResources()
+	                    ,R.drawable.default_photo),
+	                    mWidth)
+	                    );
 			}
 			else {
 				holder.ivPhoto.setImageBitmap(
