@@ -106,8 +106,8 @@ public class MyPhotoDBAdapter {
 /*
  * Usage:
  * 
- * dbHelper = new MyPhotoDBAdapter(this);
- * dbHelper.open();
- * dbHelper.close();
+ * db = new MyPhotoDBAdapter(this);
+ * db.open();
+ * db.close();
  * 
  */
